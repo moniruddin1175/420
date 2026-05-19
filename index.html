@@ -1,350 +1,953 @@
-
 <style>
-  h2.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)}
-  *{box-sizing:border-box}
-  .w{padding:1.5rem 0;color:var(--color-text-primary);font-size:14px}
-  .hero{background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:1.25rem 1.5rem;margin-bottom:1.25rem}
-  .hero-title{font-size:20px;font-weight:500;margin:0 0 4px}
-  .hero-sub{font-size:13px;color:var(--color-text-secondary);margin:0}
-  .badges{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
-  .badge{font-size:11px;font-weight:500;padding:3px 10px;border-radius:var(--border-radius-md)}
-  .b-red{background:#FCEBEB;color:#791F1F}
-  .b-blue{background:#E6F1FB;color:#0C447C}
-  .b-green{background:#EAF3DE;color:#27500A}
-  .b-amber{background:#FAEEDA;color:#633806}
-  .b-purple{background:#EEEDFE;color:#3C3489}
-  .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:1.25rem}
-  .stat{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:.875rem 1rem}
-  .stat-l{font-size:12px;color:var(--color-text-secondary);margin-bottom:4px}
-  .stat-v{font-size:18px;font-weight:500}
-  .sec{margin-bottom:1.5rem}
-  .sec-title{font-size:15px;font-weight:500;margin:0 0 .875rem;display:flex;align-items:center;gap:8px}
-  .divider{border:none;border-top:0.5px solid var(--color-border-tertiary);margin:1.25rem 0}
+  /* Modern CSS Variables & Design Tokens */
+  :root {
+    --brand-primary: #FFD200; /* MR.DIY Yellow */
+    --brand-secondary: #DA1F26; /* MR.DIY Red */
+    --accent-blue: #0A66C2;
+    --accent-green: #10B981;
+    --accent-purple: #8B5CF6;
+    --accent-amber: #F59E0B;
+    
+    --bg-main: #F8FAFC;
+    --bg-card: #FFFFFF;
+    --bg-surface: #F1F5F9;
+    
+    --text-main: #0F172A;
+    --text-muted: #64748B;
+    --text-inverse: #FFFFFF;
+    
+    --border-color: #E2E8F0;
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 16px;
+    --shadow-sm: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+    --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+    --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  }
 
-  /* TABS */
-  .tabs{display:flex;gap:0;border-bottom:0.5px solid var(--color-border-tertiary);margin-bottom:1.25rem}
-  .tab{padding:8px 16px;font-size:13px;cursor:pointer;border:none;background:transparent;color:var(--color-text-secondary);border-bottom:2px solid transparent;margin-bottom:-0.5px}
-  .tab.active{color:var(--color-text-primary);border-bottom:2px solid var(--color-text-primary);font-weight:500}
+  /* Reset & Base Styling */
+  .m-wrapper {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    background-color: var(--bg-main);
+    color: var(--text-main);
+    padding: 2rem 1.5rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    border-radius: var(--radius-lg);
+  }
+  
+  .sr-only {
+    position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); border: 0;
+  }
 
-  /* GAME CARDS */
-  .games-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-  .game-card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:1rem;cursor:pointer;transition:border-color .15s}
-  .game-card:hover{border-color:var(--color-border-secondary)}
-  .game-card.hot{border:2px solid var(--color-border-info)}
-  .hot-badge{font-size:10px;font-weight:500;background:var(--color-background-info);color:var(--color-text-info);padding:2px 8px;border-radius:var(--border-radius-md);display:inline-block;margin-bottom:6px}
-  .game-num{font-size:11px;color:var(--color-text-secondary);margin-bottom:4px;font-weight:500}
-  .game-name{font-size:14px;font-weight:500;margin:0 0 5px}
-  .game-type-row{display:flex;gap:6px;margin-bottom:6px;flex-wrap:wrap}
-  .gtag{font-size:10px;font-weight:500;padding:2px 7px;border-radius:var(--border-radius-md)}
-  .t-offline{background:#FCEBEB;color:#791F1F}
-  .t-online{background:#E6F1FB;color:#0C447C}
-  .t-both{background:#EEEDFE;color:#3C3489}
-  .game-desc{font-size:12px;color:var(--color-text-secondary);line-height:1.55;margin:0 0 8px}
-  .game-footer{font-size:11px;color:var(--color-text-secondary);display:flex;justify-content:space-between}
+  /* Modernized Hero Banner */
+  .m-hero {
+    background: linear-gradient(135deg, #1E293B 0%, #0F172A 100%);
+    color: var(--text-inverse);
+    padding: 2.5rem;
+    border-radius: var(--radius-lg);
+    margin-bottom: 2rem;
+    position: relative;
+    overflow: hidden;
+    box-shadow: var(--shadow-md);
+  }
+  
+  .m-hero::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -20%;
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(circle, rgba(255,210,0,0.15) 0%, transparent 70%);
+    border-radius: 50%;
+  }
 
-  /* ONLINE STRATEGY */
-  .online-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-  .o-card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:1rem}
-  .o-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:.5rem}
-  .o-title{font-size:13px;font-weight:500}
-  .o-kpi{font-size:11px;font-weight:500;background:var(--color-background-success);color:var(--color-text-success);padding:2px 8px;border-radius:var(--border-radius-md)}
-  .o-list{list-style:none;margin:0;padding:0}
-  .o-list li{font-size:12px;color:var(--color-text-secondary);padding:4px 0;border-bottom:0.5px solid var(--color-border-tertiary);line-height:1.5;display:flex;gap:6px}
-  .o-list li:last-child{border-bottom:none}
-  .o-dot{width:5px;height:5px;border-radius:50%;background:var(--color-text-info);flex-shrink:0;margin-top:5px}
+  .m-hero-title {
+    font-size: 26px;
+    font-weight: 800;
+    margin: 0 0 8px 0;
+    letter-spacing: -0.025em;
+    background: linear-gradient(to right, #FFFFFF, #E2E8F0);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
 
-  /* TIMELINE */
-  .tl{display:flex;flex-direction:column;gap:0}
-  .tl-row{display:flex;gap:12px}
-  .tl-l{width:70px;flex-shrink:0;text-align:right;font-size:11px;color:var(--color-text-secondary);padding-top:3px}
-  .tl-line{display:flex;flex-direction:column;align-items:center;width:20px;flex-shrink:0}
-  .tl-dot{width:10px;height:10px;border-radius:50%;border:2px solid var(--color-border-secondary);background:var(--color-background-primary);flex-shrink:0}
-  .tl-dot.on{background:#378ADD;border-color:#378ADD}
-  .tl-dot.go{background:#639922;border-color:#639922}
-  .tl-conn{width:1px;background:var(--color-border-tertiary);flex:1;min-height:16px}
-  .tl-b{flex:1;padding-bottom:14px}
-  .tl-t{font-size:13px;font-weight:500;margin:0 0 2px}
-  .tl-d{font-size:12px;color:var(--color-text-secondary);line-height:1.5;margin:0}
+  .m-hero-sub {
+    font-size: 15px;
+    color: #94A3B8;
+    margin: 0 0 1.5rem 0;
+  }
 
-  /* KPI */
-  .kpi-table{width:100%;border-collapse:collapse}
-  .kpi-table th{font-size:12px;font-weight:500;color:var(--color-text-secondary);text-align:left;padding:6px 8px;border-bottom:0.5px solid var(--color-border-tertiary)}
-  .kpi-table td{font-size:12px;padding:8px;border-bottom:0.5px solid var(--color-border-tertiary)}
-  .kpi-table tr:last-child td{border-bottom:none}
-  .dot-b{display:inline-block;width:7px;height:7px;border-radius:50%;background:#378ADD;margin-right:5px}
-  .dot-g{display:inline-block;width:7px;height:7px;border-radius:50%;background:#639922;margin-right:5px}
-  .dot-a{display:inline-block;width:7px;height:7px;border-radius:50%;background:#EF9F27;margin-right:5px}
+  .m-badges {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
 
-  .page{display:none}
-  .page.show{display:block}
+  .m-badge {
+    font-size: 12px;
+    font-weight: 600;
+    padding: 6px 14px;
+    border-radius: 30px;
+    backdrop-filter: blur(4px);
+    box-shadow: var(--shadow-sm);
+  }
+  
+  .mb-mrdiy { background-color: var(--brand-primary); color: #000; }
+  .mb-bali { background-color: rgba(255,255,255,0.15); color: var(--text-inverse); }
+  .mb-winners { background-color: rgba(16, 185, 129, 0.2); color: #34D399; }
+  .mb-days { background-color: rgba(245, 158, 11, 0.2); color: #FBBF24; }
+  .mb-hybrid { background-color: rgba(139, 92, 246, 0.2); color: #A78BFA; }
 
-  .btn-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:1.25rem}
-  button.action{background:transparent;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);padding:7px 14px;font-size:13px;cursor:pointer;color:var(--color-text-primary)}
-  button.action:hover{background:var(--color-background-secondary)}
+  /* Grid Stats */
+  .m-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 16px;
+    margin-bottom: 2rem;
+  }
+
+  .m-stat-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: 1.25rem;
+    box-shadow: var(--shadow-sm);
+    transition: var(--transition);
+  }
+  
+  .m-stat-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+  }
+
+  .m-stat-label {
+    font-size: 13px;
+    color: var(--text-muted);
+    font-weight: 500;
+    margin-bottom: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .m-stat-value {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--text-main);
+  }
+
+  /* Modern Pill Navigation Tabs */
+  .m-tabs-container {
+    background: var(--bg-surface);
+    padding: 6px;
+    border-radius: var(--radius-md);
+    margin-bottom: 2rem;
+    display: inline-flex;
+    width: 100%;
+    overflow-x: auto;
+  }
+
+  .m-tab-btn {
+    flex: 1;
+    padding: 10px 20px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-muted);
+    background: transparent;
+    border: none;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    white-space: nowrap;
+    transition: var(--transition);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+
+  .m-tab-btn.active {
+    background: var(--bg-card);
+    color: var(--text-main);
+    box-shadow: var(--shadow-sm);
+  }
+
+  /* Content Pages Setup */
+  .m-page { display: none; animation: fadeIn 0.4s ease; }
+  .m-page.show { display: block; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* GAME IDEAS TAB */
+  .m-games-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+    gap: 20px;
+  }
+
+  .m-game-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+    cursor: pointer;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-shadow: var(--shadow-sm);
+    transition: var(--transition);
+  }
+
+  .m-game-card:hover {
+    border-color: #CBD5E1;
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-md);
+  }
+
+  .m-game-card.featured {
+    border: 2px solid var(--brand-primary);
+    background: linear-gradient(180deg, #FFFFFF 0%, #FFFDF0 100%);
+  }
+
+  .m-feat-badge {
+    position: absolute;
+    top: -12px;
+    left: 1.5rem;
+    background: var(--text-main);
+    color: var(--brand-primary);
+    font-size: 11px;
+    font-weight: 700;
+    padding: 4px 12px;
+    border-radius: 20px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .m-game-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+    margin-top: 4px;
+  }
+
+  .m-game-num {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--text-muted);
+    text-transform: uppercase;
+  }
+
+  .m-gtags { display: flex; gap: 6px; }
+  .m-gtag {
+    font-size: 11px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 4px;
+  }
+  .m-gt-off { background: #FEE2E2; color: #991B1B; }
+  .m-gt-on { background: #E0F2FE; color: #075985; }
+  .m-gt-both { background: #F3E8FF; color: #6B21A8; }
+
+  .m-game-name {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text-main);
+    margin: 0 0 10px 0;
+  }
+
+  .m-game-desc {
+    font-size: 13.5px;
+    color: var(--text-muted);
+    line-height: 1.6;
+    margin-bottom: 1.25rem;
+    flex-grow: 1;
+  }
+
+  .m-game-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid var(--border-color);
+    padding-top: 1rem;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-muted);
+  }
+
+  /* ONLINE STRATEGY TAB */
+  .m-online-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+    gap: 20px;
+  }
+
+  .m-online-card {
+    background: var(--bg-card);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border-color);
+    padding: 1.5rem;
+    box-shadow: var(--shadow-sm);
+  }
+
+  .m-ocard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.25rem;
+  }
+
+  .m-ocard-title {
+    font-size: 16px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .m-ocard-kpi {
+    background: #E6F4EA;
+    color: #137333;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 6px;
+  }
+
+  .m-ocard-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .m-ocard-list li {
+    font-size: 13.5px;
+    color: #475569;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    line-height: 1.5;
+  }
+
+  .m-ocard-list li:last-child { border-bottom: none; }
+  
+  .m-list-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent-blue);
+    margin-top: 7px;
+    flex-shrink: 0;
+  }
+
+  .m-mix-container {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+    margin-top: 20px;
+    box-shadow: var(--shadow-sm);
+  }
+
+  /* TIMELINE TAB (Interactive feel) */
+  .m-timeline {
+    position: relative;
+    padding: 1rem 0;
+  }
+
+  .m-tl-item {
+    display: flex;
+    gap: 24px;
+    position: relative;
+  }
+
+  .m-tl-left {
+    width: 80px;
+    text-align: right;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text-muted);
+    padding-top: 2px;
+    flex-shrink: 0;
+  }
+
+  .m-tl-center {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .m-tl-indicator {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: #CBD5E1;
+    border: 3px solid var(--bg-card);
+    box-shadow: 0 0 0 2px #E2E8F0;
+    z-index: 2;
+  }
+
+  .m-tl-item.active .m-tl-indicator {
+    background: var(--accent-blue);
+    box-shadow: 0 0 0 3px rgba(10, 102, 194, 0.2);
+  }
+
+  .m-tl-item.success .m-tl-indicator {
+    background: var(--accent-green);
+    box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
+  }
+
+  .m-tl-line {
+    width: 2px;
+    background: #E2E8F0;
+    flex-grow: 1;
+    margin: 6px 0;
+  }
+  
+  .m-tl-item:last-child .m-tl-line { display: none; }
+
+  .m-tl-content {
+    flex-grow: 1;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    padding: 1.25rem;
+    border-radius: var(--radius-md);
+    margin-bottom: 20px;
+    box-shadow: var(--shadow-sm);
+  }
+
+  .m-tl-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text-main);
+    margin: 0 0 6px 0;
+  }
+
+  .m-tl-desc {
+    font-size: 13.5px;
+    color: #475569;
+    line-height: 1.6;
+    margin: 0;
+  }
+
+  /* KPI TRACKER TAB */
+  .m-table-container {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+  }
+
+  .m-kpi-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+  }
+
+  .m-kpi-table th {
+    background: var(--bg-surface);
+    color: var(--text-main);
+    font-size: 13px;
+    font-weight: 700;
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--border-color);
+  }
+
+  .m-kpi-table td {
+    font-size: 13.5px;
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--border-color);
+    color: #475569;
+  }
+
+  .m-kpi-table tr:last-child td { border-bottom: none; }
+  
+  .m-kpi-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: 600;
+  }
+  
+  .m-status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+  }
+
+  .m-budget-panel {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+    margin-top: 20px;
+    box-shadow: var(--shadow-sm);
+  }
+
+  .m-budget-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 14px;
+    margin: 1rem 0;
+  }
+
+  .m-budget-card {
+    background: var(--bg-surface);
+    padding: 1rem;
+    border-radius: var(--radius-md);
+    text-align: center;
+  }
+
+  /* Sticky Actions Bar at Bottom */
+  .m-action-row {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-top: 2.5rem;
+    border-top: 1px solid var(--border-color);
+    padding-top: 1.5rem;
+  }
+
+  .m-btn {
+    background: var(--bg-card);
+    color: var(--text-main);
+    border: 1px solid var(--border-color);
+    padding: 12px 20px;
+    font-size: 13.5px;
+    font-weight: 600;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: var(--transition);
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: var(--shadow-sm);
+  }
+
+  .m-btn:hover {
+    background: var(--bg-surface);
+    border-color: #CBD5E1;
+    transform: translateY(-1px);
+  }
+
+  .m-btn-primary {
+    background: var(--text-main);
+    color: var(--text-inverse);
+    border: none;
+  }
+
+  .m-btn-primary:hover {
+    background: #1E293B;
+    color: var(--text-inverse);
+  }
+
+  /* Responsive Fixes */
+  @media (max-width: 768px) {
+    .m-online-grid { grid-template-columns: 1fr; }
+    .m-tabs-container { width: 100%; }
+    .m-action-row { flex-direction: column; }
+    .m-btn { width: 100%; justify-content: center; }
+  }
 </style>
 
-<div class="w">
-  <h2 class="sr-only">MR.DIY x Bali Arcade — সম্পূর্ণ ৭ দিনের game ও online engagement master plan</h2>
+<div class="m-wrapper">
+  <h2 class="sr-only">MR.DIY x Bali Arcade Master Plan Dashboard</h2>
 
-  <div class="hero">
-    <div class="hero-title">MR.DIY x Bali Arcade — Complete Engagement Master Plan</div>
-    <div class="hero-sub">৭ দিনে offline game + online engagement — সবগুলো লক্ষ্য একসাথে</div>
-    <div class="badges">
-      <span class="badge b-red">MR.DIY</span>
-      <span class="badge b-blue">Bali Arcade FB Page</span>
-      <span class="badge b-green">৫ winners</span>
-      <span class="badge b-amber">৭ দিন</span>
-      <span class="badge b-purple">Online + Offline</span>
+  <!-- Dashboard Header / Hero -->
+  <div class="m-hero">
+    <div class="m-hero-title">MR.DIY x Bali Arcade — Engagement Master Plan</div>
+    <div class="m-hero-sub">৭ দিনে offline game ও online engagement-এর মাধ্যমে ব্র্যান্ড রিচ নিশ্চিত করার সম্পূর্ণ রোডম্যাপ</div>
+    <div class="m-badges">
+      <span class="m-badge mb-mrdiy">MR.DIY Exclusive</span>
+      <span class="m-badge mb-bali">Bali Arcade Page</span>
+      <span class="m-badge mb-winners">🏆 ৫টি Grand Prizes</span>
+      <span class="m-badge mb-days">⏱️ ৭ দিনের ক্যাম্পেইন</span>
+      <span class="m-badge mb-hybrid">Omnichannel (Online + Offline)</span>
     </div>
   </div>
 
-  <div class="stats">
-    <div class="stat"><div class="stat-l">Target Reach</div><div class="stat-v">50,000+</div></div>
-    <div class="stat"><div class="stat-l">New Followers</div><div class="stat-v">+1,000</div></div>
-    <div class="stat"><div class="stat-l">Mall Footfall</div><div class="stat-v">+500/week</div></div>
-    <div class="stat"><div class="stat-l">Entries Target</div><div class="stat-v">1,000+</div></div>
-  </div>
-
-  <div class="tabs">
-    <button class="tab active" onclick="showTab('games')">🎮 ১০টি Game Ideas</button>
-    <button class="tab" onclick="showTab('online')">📱 Online Engagement</button>
-    <button class="tab" onclick="showTab('timeline')">📅 ৭ দিনের Plan</button>
-    <button class="tab" onclick="showTab('kpi')">📊 KPI Tracker</button>
-  </div>
-
-  <!-- GAMES TAB -->
-  <div id="tab-games" class="page show">
-    <div class="games-grid">
-      <div class="game-card hot" onclick="sendPrompt('DIY Product Hunt Challenge game-এর বিস্তারিত plan, question card ও flow বলো ↗')">
-        <span class="hot-badge">সবচেয়ে কার্যকর</span>
-        <div class="game-num">Game 01</div>
-        <div class="game-name">Product Hunt Challenge</div>
-        <div class="game-type-row"><span class="gtag t-offline">Offline</span><span class="gtag t-online">Online</span></div>
-        <div class="game-desc">MR.DIY-এর product সম্পর্কে ৩টি প্রশ্নের উত্তর দিন। স্টোর ঘুরে উত্তর খুঁজতে হবে। Lucky draw-এ ৫ winner।</div>
-        <div class="game-footer"><span>দিন ১–৭</span><span>Entry: free</span></div>
-      </div>
-
-      <div class="game-card hot" onclick="sendPrompt('Spin and Win Wheel offline game-এর setup, prize structure ও কীভাবে পরিচালনা করব বলো ↗')">
-        <span class="hot-badge">সবচেয়ে আকর্ষণীয়</span>
-        <div class="game-num">Game 02</div>
-        <div class="game-name">Spin & Win Lucky Wheel</div>
-        <div class="game-type-row"><span class="gtag t-offline">Offline</span></div>
-        <div class="game-desc">MR.DIY-এ কেনাকাটা করলে বা FB পেজ Like দেখালে Lucky Spin-এর সুযোগ। Instant ছোট prize + grand draw token।</div>
-        <div class="game-footer"><span>দিন ১–৭</span><span>Purchase/Like required</span></div>
-      </div>
-
-      <div class="game-card" onclick="sendPrompt('Treasure Hunt game Bali Arcade-এর ভেতরে কীভাবে organize করব — clue design ও route বলো ↗')">
-        <div class="game-num">Game 03</div>
-        <div class="game-name">Mall Treasure Hunt</div>
-        <div class="game-type-row"><span class="gtag t-both">Online + Offline</span></div>
-        <div class="game-desc">Mall-এর ৫টি ফ্লোরে clue লুকানো। FB পেজে প্রথম clue পোস্ট হবে। MR.DIY-তে এসে final answer দিলে winner।</div>
-        <div class="game-footer"><span>Weekend Special</span><span>Family-friendly</span></div>
-      </div>
-
-      <div class="game-card" onclick="sendPrompt('DIY Photo Challenge Facebook-এ কীভাবে run করব — hashtag, judging ও winner process বলো ↗')">
-        <div class="game-num">Game 04</div>
-        <div class="game-name">DIY Photo Challenge</div>
-        <div class="game-type-row"><span class="gtag t-online">Online (FB)</span></div>
-        <div class="game-desc">MR.DIY product দিয়ে নিজে কিছু বানান, ছবি তুলে FB পেজে post করুন #DIYBaliArcade দিয়ে। সেরা ছবি — winner।</div>
-        <div class="game-footer"><span>দিন ৩–৭</span><span>UGC তৈরি হবে</span></div>
-      </div>
-
-      <div class="game-card" onclick="sendPrompt('Price is Right style guessing game MR.DIY product নিয়ে Facebook-এ কীভাবে করব বলো ↗')">
-        <div class="game-num">Game 05</div>
-        <div class="game-name">Price Guess Game</div>
-        <div class="game-type-row"><span class="gtag t-online">Online (FB)</span></div>
-        <div class="game-desc">FB পেজে MR.DIY-এর একটি product-এর ছবি দিন। Comment-এ সবচেয়ে কাছের দাম বলুন। সঠিক/নিকটতম উত্তর winner।</div>
-        <div class="game-footer"><span>প্রতিদিন ১টি post</span><span>High comment = viral</span></div>
-      </div>
-
-      <div class="game-card" onclick="sendPrompt('Complete the Sentence Facebook engagement post series MR.DIY নিয়ে লিখে দাও ↗')">
-        <div class="game-num">Game 06</div>
-        <div class="game-name">Complete the Sentence</div>
-        <div class="game-type-row"><span class="gtag t-online">Online (FB)</span></div>
-        <div class="game-desc">"MR.DIY-তে গিয়ে আমি সবার আগে _____ কিনব" — Comment-এ fill করুন। Random winner lucky draw-এ।</div>
-        <div class="game-footer"><span>সহজ, দ্রুত viral</span><span>1 min to participate</span></div>
-      </div>
-
-      <div class="game-card" onclick="sendPrompt('Tag a Friend contest Bali Arcade FB page-এর জন্য কীভাবে করব বলো ↗')">
-        <div class="game-num">Game 07</div>
-        <div class="game-name">Tag a Friend Contest</div>
-        <div class="game-type-row"><span class="gtag t-online">Online (FB)</span></div>
-        <div class="game-desc">Post Like করুন + এমন বন্ধুকে Tag করুন যে DIY কাজ পছন্দ করে। প্রতিটি tag = একটি lucky draw entry।</div>
-        <div class="game-footer"><span>Follower বাড়ে দ্রুত</span><span>Viral potential high</span></div>
-      </div>
-
-      <div class="game-card" onclick="sendPrompt('Spot the Difference ছবি Bali Arcade MR.DIY নিয়ে কীভাবে তৈরি করব ও post করব ↗')">
-        <div class="game-num">Game 08</div>
-        <div class="game-name">Spot the Difference</div>
-        <div class="game-type-row"><span class="gtag t-online">Online (FB)</span></div>
-        <div class="game-desc">MR.DIY স্টোরের দুটি প্রায় একই ছবিতে ৫টি পার্থক্য খুঁজুন। প্রথম সঠিক Comment — winner।</div>
-        <div class="game-footer"><span>দিন ২ বা ৫</span><span>Comment rush হবে</span></div>
-      </div>
-
-      <div class="game-card" onclick="sendPrompt('Emoji Quiz game Bali Arcade Facebook page-এ কীভাবে করব — emoji combo ideas দাও ↗')">
-        <div class="game-num">Game 09</div>
-        <div class="game-name">Emoji Product Quiz</div>
-        <div class="game-type-row"><span class="gtag t-online">Online (FB)</span></div>
-        <div class="game-desc">৩টি emoji দিয়ে একটি MR.DIY product বোঝানো হবে — Comment-এ উত্তর দিন। যেমন: 🔨🪛⚡ = ?</div>
-        <div class="game-footer"><span>প্রতিদিন ১টি</span><span>Fun + shareable</span></div>
-      </div>
-
-      <div class="game-card" onclick="sendPrompt('Check-in Challenge Bali Arcade offline activation কীভাবে করব — FB check-in offer plan বলো ↗')">
-        <div class="game-num">Game 10</div>
-        <div class="game-name">Check-in Challenge</div>
-        <div class="game-type-row"><span class="gtag t-both">Online + Offline</span></div>
-        <div class="game-desc">Bali Arcade-এ এসে FB Check-in করুন + MR.DIY-এর ছবি পোস্ট করুন। Proof দেখালে instant ছোট discount বা gift।</div>
-        <div class="game-footer"><span>Footfall বাড়ে</span><span>Daily reward</span></div>
-      </div>
+  <!-- Real-time Targets Grid -->
+  <div class="m-stats">
+    <div class="m-stat-card">
+      <div class="m-stat-label">Target Reach</div>
+      <div class="m-stat-value">50,000+</div>
+    </div>
+    <div class="m-stat-card">
+      <div class="m-stat-label">New Followers Goal</div>
+      <div class="m-stat-value">+1,000</div>
+    </div>
+    <div class="m-stat-card">
+      <div class="m-stat-label">Estimated Mall Footfall</div>
+      <div class="m-stat-value">+500/week</div>
+    </div>
+    <div class="m-stat-card">
+      <div class="m-stat-label">Total Submissions Target</div>
+      <div class="m-stat-value">1,000+</div>
     </div>
   </div>
 
-  <!-- ONLINE TAB -->
-  <div id="tab-online" class="page">
-    <div class="online-grid">
-      <div class="o-card">
-        <div class="o-head"><span class="o-title"><i class="ti ti-users" aria-hidden="true" style="font-size:15px;margin-right:5px"></i>Page Followers বাড়ানো</span><span class="o-kpi">+১,০০০ লক্ষ্য</span></div>
-        <ul class="o-list">
-          <li><span class="o-dot"></span>Tag a Friend + Like contest — প্রতি tag = extra entry</li>
-          <li><span class="o-dot"></span>Winner announce-এ "পেজ like থাকলেই নোটিফিকেশন পাবেন" reminder</li>
-          <li><span class="o-dot"></span>FB Boost — ৳২,০০০ দিয়ে Chattogram ১৫ কিমি radius target</li>
-          <li><span class="o-dot"></span>Staff ও MR.DIY team-কে পেজ share করতে বলুন</li>
-        </ul>
-      </div>
-      <div class="o-card">
-        <div class="o-head"><span class="o-title"><i class="ti ti-thumb-up" aria-hidden="true" style="font-size:15px;margin-right:5px"></i>Post Engagement বাড়ানো</span><span class="o-kpi">৫–৮% rate লক্ষ্য</span></div>
-        <ul class="o-list">
-          <li><span class="o-dot"></span>Comment-based games (Emoji Quiz, Price Guess, Fill-in-blank) প্রতিদিন</li>
-          <li><span class="o-dot"></span>Story poll: "কোন product তোমার favorite?" — দিনে ২টি story</li>
-          <li><span class="o-dot"></span>Winner-দের ছবি tag করে repost — UGC boost</li>
-          <li><span class="o-dot"></span>FB algorithm-এ comment post সবচেয়ে বেশি rank করে — comment বাড়ান</li>
-        </ul>
-      </div>
-      <div class="o-card">
-        <div class="o-head"><span class="o-title"><i class="ti ti-building-store" aria-hidden="true" style="font-size:15px;margin-right:5px"></i>Mall Footfall বাড়ানো</span><span class="o-kpi">+৫০০/সপ্তাহ</span></div>
-        <ul class="o-list">
-          <li><span class="o-dot"></span>Check-in Challenge — offline আসলেই prize</li>
-          <li><span class="o-dot"></span>"শুধু mall-এ এলেই Spin করতে পারবেন" — exclusivity</li>
-          <li><span class="o-dot"></span>Offline winner announcement ceremony — ভিড় তৈরি</li>
-          <li><span class="o-dot"></span>Weekend special treasure hunt — family audience টানবে</li>
-        </ul>
-      </div>
-      <div class="o-card">
-        <div class="o-head"><span class="o-title"><i class="ti ti-brand-facebook" aria-hidden="true" style="font-size:15px;margin-right:5px"></i>Daily Content Plan</span><span class="o-kpi">৭ দিনে ২০+ post</span></div>
-        <ul class="o-list">
-          <li><span class="o-dot"></span>সকাল ৯টা — engagement post (quiz/game/poll)</li>
-          <li><span class="o-dot"></span>দুপুর ১টা — story update (entry count, reminder)</li>
-          <li><span class="o-dot"></span>বিকেল ৫টা — highlight/behind-the-scenes reel</li>
-          <li><span class="o-dot"></span>রাত ৮টা — winner teaser / tomorrow preview</li>
-        </ul>
-      </div>
-    </div>
-    <div style="background:var(--color-background-secondary);border-radius:var(--border-radius-lg);padding:1rem;margin-top:10px">
-      <div style="font-size:13px;font-weight:500;margin-bottom:6px">Content mix (৭ দিনে)</div>
-      <div style="display:flex;gap:8px;flex-wrap:wrap">
-        <span class="badge b-blue">৭টি Game/Quiz Post</span>
-        <span class="badge b-green">৭টি Story Poll</span>
-        <span class="badge b-amber">৩টি Reminder Post</span>
-        <span class="badge b-purple">২টি Behind-the-scenes Reel</span>
-        <span class="badge b-red">১টি Winner Announcement</span>
-      </div>
-    </div>
+  <!-- Modern Navigation Pills -->
+  <div class="m-tabs-container">
+    <button class="m-tab-btn active" onclick="switchModernTab('m-games')">🎯 ১০টি Game Ideas</button>
+    <button class="m-tab-btn" onclick="switchModernTab('m-online')">📱 Online Engagement</button>
+    <button class="m-tab-btn" onclick="switchModernTab('m-timeline')">📅 ৭ দিনের এক্সিকিউশন প্ল্যান</button>
+    <button class="m-tab-btn" onclick="switchModernTab('m-kpi')">📊 KPI Tracker & Budget</button>
   </div>
 
-  <!-- TIMELINE TAB -->
-  <div id="tab-timeline" class="page">
-    <div class="tl">
-      <div class="tl-row">
-        <div class="tl-l">Day 0</div>
-        <div class="tl-line"><div class="tl-dot on"></div><div class="tl-conn"></div></div>
-        <div class="tl-b"><div class="tl-t">Pre-Launch Setup</div><div class="tl-d">Banner print ও install, staff brief, question card ready, FB teaser post boost করুন। Spin Wheel setup complete।</div></div>
-      </div>
-      <div class="tl-row">
-        <div class="tl-l">Day 1</div>
-        <div class="tl-line"><div class="tl-dot on"></div><div class="tl-conn"></div></div>
-        <div class="tl-b"><div class="tl-t">Grand Launch — সকাল ১০টা</div><div class="tl-d">FB official campaign post + boost (৳১,৫০০)। Mall-এ opening — Spin Wheel ও Product Hunt শুরু। Story: "Campaign শুরু হয়েছে!"</div></div>
-      </div>
-      <div class="tl-row">
-        <div class="tl-l">Day 2</div>
-        <div class="tl-line"><div class="tl-dot on"></div><div class="tl-conn"></div></div>
-        <div class="tl-b"><div class="tl-t">Emoji Quiz + Spot the Difference</div><div class="tl-d">সকালে Emoji Quiz post। দুপুরে Spot the Difference। Story-তে "এখন পর্যন্ত X জন participate করেছেন।"</div></div>
-      </div>
-      <div class="tl-row">
-        <div class="tl-l">Day 3</div>
-        <div class="tl-line"><div class="tl-dot on"></div><div class="tl-conn"></div></div>
-        <div class="tl-b"><div class="tl-t">DIY Photo Challenge Launch</div><div class="tl-d">Photo Challenge announce। Price Guess game post। Check-in Challenge reminder। Boost: ৳১,০০০।</div></div>
-      </div>
-      <div class="tl-row">
-        <div class="tl-l">Day 4</div>
-        <div class="tl-line"><div class="tl-dot on"></div><div class="tl-conn"></div></div>
-        <div class="tl-b"><div class="tl-t">Mid-week Momentum</div><div class="tl-d">Tag a Friend contest। Best photo entries highlight। Behind-the-scenes reel — MR.DIY স্টোরের ভেতর থেকে।</div></div>
-      </div>
-      <div class="tl-row">
-        <div class="tl-l">Day 5</div>
-        <div class="tl-line"><div class="tl-dot"></div><div class="tl-conn"></div></div>
-        <div class="tl-b"><div class="tl-t">Weekend Treasure Hunt</div><div class="tl-d">Mall Treasure Hunt শুরু — first clue FB পেজে। Complete the Sentence post। Story countdown: "৩ দিন বাকি!"</div></div>
-      </div>
-      <div class="tl-row">
-        <div class="tl-l">Day 6</div>
-        <div class="tl-line"><div class="tl-dot"></div><div class="tl-conn"></div></div>
-        <div class="tl-b"><div class="tl-t">Final Rush — Last Chance</div><div class="tl-d">"আজ শেষ দিন" urgent post। Entry box count শেয়ার। Spin Wheel শেষ দিন announcement। Story: "আজ রাত ৮টায় entry বন্ধ!"</div></div>
-      </div>
-      <div class="tl-row">
-        <div class="tl-l">Day 7</div>
-        <div class="tl-line"><div class="tl-dot go"></div><div class="tl-conn"></div></div>
-        <div class="tl-b"><div class="tl-t">Winner Day — সবচেয়ে গুরুত্বপূর্ণ</div><div class="tl-d">MR.DIY-এর সামনে live draw ceremony। ৫ winner-কে ফোন ও সরাসরি ডাকুন। Video করুন — reel ও post। এই video-ই সবচেয়ে viral হবে।</div></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- KPI TAB -->
-  <div id="tab-kpi" class="page">
-    <table class="kpi-table">
-      <thead>
-        <tr><th>লক্ষ্য</th><th>মেট্রিক</th><th>Day 3 checkpoint</th><th>Day 7 লক্ষ্য</th><th>কীভাবে মাপবেন</th></tr>
-      </thead>
-      <tbody>
-        <tr><td><span class="dot-b"></span>Followers</td><td>New page likes</td><td>+৩০০</td><td>+১,০০০</td><td>FB Page Insights</td></tr>
-        <tr><td><span class="dot-g"></span>Engagement</td><td>Comment/share rate</td><td>৩%+</td><td>৫–৮%</td><td>Insights → Reach</td></tr>
-        <tr><td><span class="dot-a"></span>Footfall</td><td>FB Check-ins</td><td>+১৫০</td><td>+৫০০</td><td>Page → Check-ins</td></tr>
-        <tr><td><span class="dot-b"></span>Reach</td><td>Post reach (organic+paid)</td><td>১৫,০০০</td><td>৫০,০০০+</td><td>Insights → Reach</td></tr>
-        <tr><td><span class="dot-g"></span>Entries</td><td>Total game entries</td><td>৩০০+</td><td>১,০০০+</td><td>Lucky draw box count</td></tr>
-        <tr><td><span class="dot-a"></span>UGC</td><td>Photo/tag posts</td><td>৫০+</td><td>২০০+</td><td>#DIYBaliArcade search</td></tr>
-      </tbody>
-    </table>
-    <div style="background:var(--color-background-secondary);border-radius:var(--border-radius-lg);padding:1rem;margin-top:10px">
-      <div style="font-size:13px;font-weight:500;margin-bottom:6px">Ad Budget breakdown (৭ দিন)</div>
-      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:8px">
-        <div style="background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);padding:.75rem;text-align:center">
-          <div style="font-size:11px;color:var(--color-text-secondary);margin-bottom:4px">Launch Boost</div>
-          <div style="font-size:16px;font-weight:500">৳১,৫০০</div>
+  <!-- TAB 1: GAME IDEAS -->
+  <div id="m-games" class="m-page show">
+    <div class="m-games-grid">
+      
+      <div class="m-game-card featured" onclick="sendPrompt('DIY Product Hunt Challenge game-এর বিস্তারিত plan, question card ও flow বলো ↗')">
+        <span class="m-feat-badge">🔥 Highly Recommended</span>
+        <div class="m-game-meta">
+          <div class="m-game-num">Game 01</div>
+          <div class="m-gtags"><span class="m-gtag m-gt-both">Hybrid</span></div>
         </div>
-        <div style="background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);padding:.75rem;text-align:center">
-          <div style="font-size:11px;color:var(--color-text-secondary);margin-bottom:4px">Mid Boost</div>
-          <div style="font-size:16px;font-weight:500">৳১,০০০</div>
+        <div class="m-game-name">Product Hunt Challenge</div>
+        <div class="m-game-desc">MR.DIY-এর প্রোডাক্ট রিলেটেড ৩টি মজার ধাঁধার উত্তর দিতে হবে। উত্তর খুঁজতে কাস্টমার পুরো স্টোর ঘুরবেন। লাকি ড্র-এর মাধ্যমে ৫ জন উইনার নির্বাচন।</div>
+        <div class="m-game-footer"><span>চলবে: দিন ১–৭</span><span>অংশগ্রহণ: ফ্রি</span></div>
+      </div>
+
+      <div class="m-game-card featured" onclick="sendPrompt('Spin and Win Wheel offline game-এর setup, prize structure ও কীভাবে পরিচালনা করব বলো ↗')">
+        <span class="m-feat-badge">💎 Instant Hook</span>
+        <div class="m-game-meta">
+          <div class="m-game-num">Game 02</div>
+          <div class="m-gtags"><span class="m-gtag m-gt-off">Offline</span></div>
         </div>
-        <div style="background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);padding:.75rem;text-align:center">
-          <div style="font-size:11px;color:var(--color-text-secondary);margin-bottom:4px">Winner Post Boost</div>
-          <div style="font-size:16px;font-weight:500">৳৫০০</div>
+        <div class="m-game-name">Spin & Win Lucky Wheel</div>
+        <div class="m-game-desc">নির্দিষ্ট টাকার কেনাকাটা করলে অথবা Bali Arcade পেজ লাইক দিয়ে কাস্টমার চাকা ঘোরানোর সুযোগ পাবেন। ইনস্ট্যান্ট ছোট গিফট অথবা ফাইনাল ড্র টোকেন।</div>
+        <div class="m-game-footer"><span>চলবে: দিন ১–৭</span><span>শর্ত: কেনাকাটা/লাইক</span></div>
+      </div>
+
+      <div class="m-game-card" onclick="sendPrompt('Treasure Hunt game Bali Arcade-এর ভেতরে কীভাবে organize করব — clue design ও route বলো ↗')">
+        <div class="m-game-meta">
+          <div class="m-game-num">Game 03</div>
+          <div class="m-gtags"><span class="m-gtag m-gt-both">Online + Offline</span></div>
+        </div>
+        <div class="m-game-name">Mall Treasure Hunt</div>
+        <div class="m-game-desc">শপিং মলের বিভিন্ন ফ্লোরে ক্লু লুকানো থাকবে। প্রথম ক্লু দেওয়া হবে ফেসবুক পেজে। ফাইনাল উত্তরটি নিয়ে আসতে হবে সরাসরি MR.DIY স্টোরে।</div>
+        <div class="m-game-footer"><span>Weekend Special</span><span>ফ্যামিলি অডিয়েন্স</span></div>
+      </div>
+
+      <div class="m-game-card" onclick="sendPrompt('DIY Photo Challenge Facebook-এ কীভাবে run করব — hashtag, judging ও winner process বলো ↗')">
+        <div class="m-game-meta">
+          <div class="m-game-num">Game 04</div>
+          <div class="m-gtags"><span class="m-gtag m-gt-on">Online (FB)</span></div>
+        </div>
+        <div class="m-game-name">DIY Photo Challenge</div>
+        <div class="m-game-desc">MR.DIY এর যেকোনো প্রোডাক্ট ব্যবহার করে ঘর সাজানো বা ক্রিয়েটিভ কাজের ছবি তুলুন, #DIYBaliArcade হ্যাশট্যাগ দিয়ে পেজে পোস্ট করুন। সেরা ছবি উইনার।</div>
+        <div class="m-game-footer"><span>দিন ৩–৭</span><span>UGC Content Creator</span></div>
+      </div>
+
+      <div class="m-game-card" onclick="sendPrompt('Price is Right style guessing game MR.DIY product নিয়ে Facebook-এ কীভাবে করব বলো ↗')">
+        <div class="m-game-meta">
+          <div class="m-game-num">Game 05</div>
+          <div class="m-gtags"><span class="m-gtag m-gt-on">Online (FB)</span></div>
+        </div>
+        <div class="m-game-name">Price Guess Game</div>
+        <div class="m-game-desc">ফেসবুক পেজে একটি নির্দিষ্ট জনপ্রিয় প্রোডাক্টের ছবি দেওয়া হবে। কমেন্টে কাস্টমারদের সঠিক দাম অনুমান করতে হবে। সঠিক বা সবচেয়ে কাছের কমেন্টকারী উইনার।</div>
+        <div class="m-game-footer"><span>প্রতিদিন ১টি পোস্ট</span><span>হাই কমেন্ট ভলিউম</span></div>
+      </div>
+
+      <div class="m-game-card" onclick="sendPrompt('Complete the Sentence Facebook engagement post series MR.DIY নিয়ে লিখে দাও ↗')">
+        <div class="m-game-meta">
+          <div class="m-game-num">Game 06</div>
+          <div class="m-gtags"><span class="m-gtag m-gt-on">Online (FB)</span></div>
+        </div>
+        <div class="m-game-name">Complete the Sentence</div>
+        <div class="m-game-desc">"MR.DIY-তে গিয়ে আমি সবার আগে _____ কিনতে চাই!" শূন্যস্থান পূরণ করে কমেন্ট করতে হবে। দারুণ ও মজার কমেন্টকারীদের মধ্যে লাকি ড্র।</div>
+        <div class="m-game-footer"><span>সহজ ও দ্রুত ভাইরাল</span><span>১ মিনিটে রেসপন্স</span></div>
+      </div>
+
+      <div class="m-game-card" onclick="sendPrompt('Tag a Friend contest Bali Arcade FB page-এর জন্য কীভাবে করব বলো ↗')">
+        <div class="m-game-meta">
+          <div class="m-game-num">Game 07</div>
+          <div class="m-gtags"><span class="m-gtag m-gt-on">Online (FB)</span></div>
+        </div>
+        <div class="m-game-name">Tag a Friend Contest</div>
+        <div class="m-game-desc">পোস্টে লাইক দিয়ে এমন ৩ জন বন্ধুকে ট্যাগ করতে হবে যারা হোম ইম্প্রুভমেন্ট বা ক্রাফটিং ভালোবাসে। প্রতিটি ভ্যালিড ট্যাগ ১টি করে লাকি ড্র এন্ট্রি হিসেবে কাউন্ট হবে।</div>
+        <div class="m-game-footer"><span>ফলোয়ার গ্রোথ বুস্টার</span><span>অর্গানিক রিচ বৃদ্ধি</span></div>
+      </div>
+
+      <div class="m-game-card" onclick="sendPrompt('Spot the Difference ছবি Bali Arcade MR.DIY নিয়ে কীভাবে তৈরি করব ও post করব ↗')">
+        <div class="m-game-meta">
+          <div class="m-game-num">Game 08</div>
+          <div class="m-gtags"><span class="m-gtag m-gt-on">Online (FB)</span></div>
+        </div>
+        <div class="m-game-name">Spot the Difference</div>
+        <div class="m-game-desc">MR.DIY স্টোরের ভেতর থেকে তোলা দুটি প্রায় একই রকম ছবির গ্রাফিক্স দেওয়া হবে, যার মধ্যে ৫টি সূক্ষ্ম পার্থক্য থাকবে। দ্রুত কমেন্টকারীরা পাবেন পয়েন্ট।</div>
+        <div class="m-game-footer"><span>দিন ২ এবং ৫</span><span>হাই রিটেনশন গেম</span></div>
+      </div>
+
+      <div class="m-game-card" onclick="sendPrompt('Emoji Quiz game Bali Arcade Facebook page-এ কীভাবে করব — emoji combo ideas দাও ↗')">
+        <div class="m-game-meta">
+          <div class="m-game-num">Game 09</div>
+          <div class="m-gtags"><span class="m-gtag m-gt-on">Online (FB)</span></div>
+        </div>
+        <div class="m-game-name">Emoji Product Quiz</div>
+        <div class="m-game-desc">৩টি ইমোজি কম্বিনেশন দেখে প্রোডাক্টের নাম গেস করতে হবে। যেমন: 🔨🪛⚡ = টুলবক্স/হার্ডওয়্যার। সঠিক উত্তরের মধ্য থেকে লাকি উইনার।</div>
+        <div class="m-game-footer"><span>প্রতিদিন সকালের বুস্ট</span><span>মজার কুইজ</span></div>
+      </div>
+
+      <div class="m-game-card" onclick="sendPrompt('Check-in Challenge Bali Arcade offline activation কীভাবে করব — FB check-in offer plan বলো ↗')">
+        <div class="m-game-meta">
+          <div class="m-game-num">Game 10</div>
+          <div class="m-gtags"><span class="m-gtag m-gt-both">Hybrid</span></div>
+        </div>
+        <div class="m-game-name">Location Check-in Challenge</div>
+        <div class="m-game-desc">Bali Arcade মলে এসে ফেসবুকে চেক-ইন দিয়ে স্টোরের একটি ছবি বা সেলফি আপলোড দিতে হবে। কাউন্টারে সেই প্রুফ দেখালেই নিশ্চিত সারপ্রাইজ গিফট।</div>
+        <div class="m-game-footer"><span>স্টোর ফুটফল বৃদ্ধি</span><span>সোশ্যাল মিডিয়া ভিজিবিলিটি</span></div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- TAB 2: ONLINE ENGAGEMENT -->
+  <div id="m-online" class="m-page">
+    <div class="m-online-grid">
+      <div class="m-online-card">
+        <div class="m-ocard-header">
+          <span class="m-ocard-title">📈 পেজ ফলোয়ার বৃদ্ধি</span>
+          <span class="m-ocard-kpi">+১,০০০ নিউ লাইকস</span>
+        </div>
+        <ul class="m-ocard-list">
+          <li><span class="m-list-dot"></span>Tag a Friend কন্টেস্ট দিয়ে ফ্রেন্ড সার্কেলে অর্গানিক রিচ পুশ করা।</li>
+          <li><span class="m-list-dot"></span>উইনার অ্যানাউন্সমেন্ট পোস্টে "পেজ লাইক না থাকলে ডিসকোয়ালিফাই হবেন" শর্ত যুক্ত করা।</li>
+          <li><span class="m-list-dot"></span>মেটা অ্যাডস বুস্ট: Chattogram-এর ১৫ কিমি রেডিয়াসের রাইট অডিয়েন্স টার্গেট করা।</li>
+        </ul>
+      </div>
+
+      <div class="m-online-card">
+        <div class="m-ocard-header">
+          <span class="m-ocard-title">💬 কমেন্ট ও এঙ্গেজমেন্ট রেট</span>
+          <span class="m-ocard-kpi">৫% - ৮% টার্গেট</span>
+        </div>
+        <ul class="m-ocard-list">
+          <li><span class="m-list-dot"></span>সহজ কুইজ ও গেস গেমগুলো প্রতিদিন চালু রাখা যাতে অ্যালগরিদম কমেন্ট পুশ পায়।</li>
+          <li><span class="m-list-dot"></span>ডেইলি ২টা করে ফেসবুক স্টোরি পোল ("কোন প্রোডাক্টটি আপনার বেশি দরকার?") রান করা।</li>
+          <li><span class="m-list-dot"></span>ইউজারদের কমেন্টের রিপ্লাই দিয়ে পেজের রেসপন্সিভনেস এবং হাইপ ধরে রাখা।</li>
+        </ul>
+      </div>
+
+      <div class="m-online-card">
+        <div class="m-ocard-header">
+          <span class="m-ocard-title">🛍️ মলে কাস্টমার ফুটফল বৃদ্ধি</span>
+          <span class="m-ocard-kpi">+৫০০ কাস্টমার/সপ্তাহ</span>
+        </div>
+        <ul class="m-ocard-list">
+          <li><span class="m-list-dot"></span>চেক-ইন চ্যালেঞ্জের মাধ্যমে কাস্টমারদের সরাসরি মলে আসার অফার দেওয়া।</li>
+          <li><span class="m-list-dot"></span>"লাকি হুইন স্পিন করতে হলে সরাসরি স্টোরে আসতে হবে" - এই এক্সক্লুসিভিটি বজায় রাখা।</li>
+          <li><span class="m-list-dot"></span>উইকেন্ডে ট্র্রেজার হান্ট গেমের মাধ্যমে পুরো ফ্যামিলি অডিয়েন্সকে মলে আকর্ষণ করা।</li>
+        </ul>
+      </div>
+
+      <div class="m-online-card">
+        <div class="m-ocard-header">
+          <span class="m-ocard-title">📅 ডেইলি কনটেন্ট পাবলিশিং মিক্স</span>
+          <span class="m-ocard-kpi">৭ দিনে ২০+ কনটেন্ট</span>
+        </div>
+        <ul class="m-ocard-list">
+          <li><span class="m-list-dot"></span><strong>সকাল ০৯:০০</strong> — কুইজ / গেম / পোল পোস্ট (মর্নিং এঙ্গেজমেন্ট)</li>
+          <li><span class="m-list-dot"></span><strong>দুপুর ০১:০০</strong> — স্টোরি আপডেট (এন্ট্রি কাউন্ট ও রিমাইন্ডার)</li>
+          <li><span class="m-list-dot"></span><strong>বিকেল ০৫:০০</strong> — স্টোর হাইলাইট বা বিহাইন্ড দ্য সিন রিলস (ভিডিও কনটেন্ট)</li>
+          <li><span class="m-1ist-dot"></span><strong>রাত ০৮:০০</strong> — উইনার টিজার অথবা আগামীকালের গেম প্রিভিউ</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="m-mix-container">
+      <div style="font-size: 15px; font-weight: 700; margin-bottom: 12px;">টোটাল কনটেন্ট ডিস্ট্রিবিউশন পাইপলাইন</div>
+      <div class="m-badges">
+        <span class="m-badge mb-bali">৭টি গেম/কুইজ পোস্ট</span>
+        <span class="m-badge mb-winners">৭টি ইন্টারেক্টিভ স্টোরি পোল</span>
+        <span class="m-badge mb-days">৩টি আর্জেন্ট কাউন্টডাউন রিমাইন্ডার</span>
+        <span class="m-badge mb-hybrid">২টি বিহাইন্ড দ্য সিন স্টোর রিলস</span>
+        <span class="m-badge mb-mrdiy">১টি গ্র্যান্ড উইনার অ্যানাউন্সমেন্ট ভিডিও</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB 3: TIMELINE -->
+  <div id="m-timeline" class="m-page">
+    <div class="m-timeline">
+      
+      <div class="m-tl-item active">
+        <div class="m-tl-left">Day 0</div>
+        <div class="m-tl-center">
+          <div class="m-tl-indicator"></div>
+          <div class="m-tl-line"></div>
+        </div>
+        <div class="m-tl-content">
+          <div class="m-tl-title">প্রি-লঞ্চ সেটআপ এবং প্রিপারেশন</div>
+          <p class="m-tl-desc">স্টোরে ব্যানার এবং ড্র বক্স ইনস্টলেশন, অন-গ্রাউন্ড স্টাফ ব্রিফিং, কোশ্চেন কার্ড প্রিন্ট রেডি এবং ফেসবুকে প্রথম টিজার পোস্ট বুস্টিং চালু।</p>
         </div>
       </div>
-      <div style="text-align:center;font-size:13px;font-weight:500;margin-top:8px">মোট বাজেট: ৳৩,০০০ (Ads) + Prize vouchers</div>
+
+      <div class="m-tl-item active">
+        <div class="m-tl-left">Day 1</div>
+        <div class="m-tl-center">
+          <div class="m-tl-indicator"></div>
+          <div class="m-tl-line"></div>
+        </div>
+        <div class="m-tl-content">
+          <div class="m-tl-title">ক্যাম্পেইন গ্র্যান্ড লঞ্চ (সকাল ১০:০০)</div>
+          <p class="m-tl-desc">ফেসবুক পেজে অফিশিয়াল লঞ্চ ভিডিও/পোস্ট পাবলিশ এবং বুস্ট (৳১,৫০০)। স্টোরে স্পিন হুইল এবং প্রোডাক্ট হান্ট গেম অফিশিয়ালি ওপেন।</p>
+        </div>
+      </div>
+
+      <div class="m-tl-item">
+        <div class="m-tl-left">Day 2-3</div>
+        <div class="m-tl-center">
+          <div class="m-tl-indicator"></div>
+          <div class="m-tl-line"></div>
+        </div>
+        <div class="m-tl-content">
+          <div class="m-tl-title">মিড-উইক মোমেন্টাম ও ফটো চ্যালেঞ্জ</div>
+          <p class="m-tl-desc">ইমোজি কুইজ ও স্পট দ্য ডিফারেন্স লাইভ। ৩ নম্বর দিনে 'DIY Photo Challenge' ঘোষণা। কাস্টমারদের পার্টিসিপেশন ডাটা স্টোরিতে শেয়ার।</p>
+        </div>
+      </div>
+
+      <div class="m-tl-item">
+        <div class="m-tl-left">Day 4-5</div>
+        <div class="m-tl-center">
+          <div class="m-tl-indicator"></div>
+          <div class="m-tl-line"></div>
+        </div>
+        <div class="m-tl-content">
+          <div class="m-tl-title">উইকেন্ড স্পেশাল ম্যাসিভ ফুটফল ড্রাইভ</div>
+          <p class="m-tl-desc">ট্যাগ আ ফ্রেন্ড কন্টেস্ট হাইপ। ৫ম দিনে মল ট্রেজার হান্ট শুরু (প্রথম ক্লু ফেসবুকে)। মলে কাস্টমারদের উপচে পড়া ভিড় হ্যান্ডেল করার প্রস্তুতি।</p>
+        </div>
+      </div>
+
+      <div class="m-tl-item">
+        <div class="m-tl-left">Day 6</div>
+        <div class="m-tl-center">
+          <div class="m-tl-indicator"></div>
+          <div class="m-tl-line"></div>
+        </div>
+        <div class="m-tl-content">
+          <div class="m-tl-title">ফাইনাল রাশ — লাস্ট চান্স রিমাইন্ডার</div>
+          <p class="m-tl-desc">"আজ রাতেই শেষ সুযোগ" ফিয়ার অফ মিসিং আউট (FOMO) ক্রিয়েট করে পোস্ট। এন্ট্রি বক্স ফুল করার শেষ মুহূর্তের স্টোরি আপডেট। রাত ০৮:০০ টায় এন্ট্রি ক্লোজ।</p>
+        </div>
+      </div>
+
+      <div class="m-tl-item success">
+        <div class="m-tl-left">Day 7</div>
+        <div class="m-tl-center">
+          <div class="m-tl-indicator"></div>
+          <div class="m-tl-line"></div>
+        </div>
+        <div class="m-tl-content" style="background: linear-gradient(180deg, #FFFFFF 0%, #F0FDF4 100%); border-color: #BBF7D0;">
+          <div class="m-tl-title" style="color: #166534;">🎉 উইনার ডে এবং লাইভ ড্র সেরেমনি</div>
+          <p class="m-tl-desc">MR.DIY স্টোরের সামনে মেগা লাইভ লাকি ড্র অনুষ্ঠান। ৫ জন উইনারকে অন-স্পট কল এবং ইনভাইটেশন। সম্পূর্ণ ইভেন্টের হাই-কোয়ালিটি রিলস এবং ভিডিও পাবলিশ। এই কনটেন্টটিই সবচেয়ে বেশি ভাইরাল হবে!</p>
+        </div>
+      </div>
+
     </div>
   </div>
 
-  <div class="btn-row">
-    <button class="action" onclick="sendPrompt('৭ দিনের প্রতিদিনের জন্য সম্পূর্ণ Facebook post copy বাংলায় লিখে দাও ↗')">সব Post Copy লিখে দাও ↗</button>
-    <button class="action" onclick="sendPrompt('Campaign-এর নিয়মাবলী ও terms বাংলায় লিখে দাও ↗')">নিয়মাবলী লিখে দাও ↗</button>
-    <button class="action" onclick="sendPrompt('Winner announcement day-এর script ও reel idea বলো ↗')">Winner Day Script ↗</button>
-    <button class="action" onclick="sendPrompt('Meta Ads boost targeting setup — audience, placement ও budget breakdown বলো ↗')">Ads Setup করো ↗</button>
+  <!-- TAB 4: KPI & BUDGET -->
+  <div id="m-kpi" class="m-page">
+    <div class="m-table-container">
+      <table class="m-kpi-table">
+        <thead>
+          <tr>
+            <th>ক্যাম্পেইন লক্ষ্য</th>
+            <th>মূল মেট্রিক (KPI)</th>
+            <th>Day 3 চেকপয়েন্ট</th>
+            <th>Day 7 ফাইনাল গোল</th>
+            <th>ট্র্যাকিং মেথড</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><div class="m-kpi-status"><span class="m-status-dot" style="background:var(--accent-blue);"></span>ফলোয়ার গ্রোথ</div></td>
+            <td>New Page Likes</td>
+            <td>+৩০০</td>
+            <td><strong>+১,০০০</strong></td>
+            <td>FB Page Insights</td>
+          </tr>
+          <tr>
+            <td><div class="m-kpi-status"><span class="m-status-dot" style="background:var(--accent-purple);"></span>পেজ এঙ্গেজমেন্ট</div></td>
+            <td>Comment/Share Rate</td>
+            <td>৩%+</td>
+            <td><strong>৫% – ৮%</strong></td>
+            <td>Meta Business Suite</td>
+          </tr>
+          <tr>
+            <td><div class="m-kpi-status"><span class="m-status-dot" style="background:var(--accent-amber);"></span>মলের ফুটফল</div></td>
+            <td>Location Check-ins</td>
+            <td>+১৫০</td>
+            <td><strong>+৫০০+</strong></td>
+            <td>Facebook Check-in Data</td>
+          </tr>
+          <tr>
+            <td><div class="m-kpi-status"><span class="m-status-dot" style="background:var(--accent-green);"></span>ক্যাম্পেইন রিচ</div></td>
+            <td>Total Impression</td>
+            <td>১৫,০০০</td>
+            <td><strong>৫০,০০০+</strong></td>
+            <td>Ad Manager Report</td>
+          </tr>
+          <tr>
+            <td><div class="m-kpi-status"><span class="m-status-dot" style="background:#EF4444;"></span>টোটাল পার্টিসিপেশন</div></td>
+            <td>Physical/Digital Entries</td>
+            <td>৩০০+</td>
+            <td><strong>১,০০০+</strong></td>
+            <td>Lucky Draw Box Count</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="m-budget-panel">
+      <div style="font-size: 16px; font-weight: 700; color: var(--text-main);">Meta Ads Budget Allocation (৭ দিন)</div>
+      <div class="m-budget-grid">
+        <div class="m-budget-card">
+          <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 4px;">Launch Boost (Day 1-2)</div>
+          <div style="font-size: 20px; font-weight: 700; color: var(--text-main);">৳১,৫০০</div>
+        </div>
+        <div class="m-budget-card">
+          <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 4px;">Mid-Week Target (Day 3-5)</div>
+          <div style="font-size: 20px; font-weight: 700; color: var(--text-main);">৳১,০০০</div>
+        </div>
+        <div class="m-budget-card">
+          <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 4px;">Winner Announcement (Day 7)</div>
+          <div style="font-size: 20px; font-weight: 700; color: var(--text-main);">৳৫০০</div>
+        </div>
+      </div>
+      <div style="text-align: center; font-size: 14px; font-weight: 700; color: #1E293B; margin-top: 12px; background: #FFFBEB; padding: 10px; border-radius: 8px; border: 1px dashed #FBBF24;">
+        💰 মোট মেটা বাজেট: ৳৩,০০০ (Paid Ads) + ৫ জন বিজয়ীর জন্য MR.DIY গিফট ভাউচার
+      </div>
+    </div>
+  </div>
+
+  <!-- Modern Interactive Action Buttons -->
+  <div class="m-action-row">
+    <button class="m-btn m-btn-primary" onclick="sendPrompt('৭ দিনের প্রতিদিনের জন্য সম্পূর্ণ Facebook post copy বাংলায় লিখে দাও ↗')">📄 সব পোস্ট কপি জেনারেট করো</button>
+    <button class="m-btn" onclick="sendPrompt('Campaign-এর নিয়মাবলী ও terms বাংলায় লিখে দাও ↗')">⚖️ ক্যাম্পেইন নিয়মাবলী ও Terms</button>
+    <button class="m-btn" onclick="sendPrompt('Winner announcement day-এর script ও reel idea বলো ↗')">🎬 Winner Day স্ক্রিপ্ট ও রিল আইডিয়া</button>
+    <button class="m-btn" onclick="sendPrompt('Meta Ads boost targeting setup — audience, placement ও budget breakdown বলো ↗')">🎯 মেটা অ্যাড টার্গেটিং সেটআপ</button>
   </div>
 </div>
 
 <script>
-function showTab(name) {
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('show'));
-  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-  document.getElementById('tab-'+name).classList.add('show');
-  event.target.classList.add('active');
+function switchModernTab(tabId) {
+  // Hide all pages with smooth transition
+  document.querySelectorAll('.m-page').forEach(page => {
+    page.classList.remove('show');
+  });
+  // Remove active class from all buttons
+  document.querySelectorAll('.m-tab-btn').forEach(btn => {
+    btn.classList.remove('active');
+  });
+  
+  // Show target page
+  document.getElementById(tabId).classList.add('show');
+  // Add active class to clicked button
+  event.currentTarget.classList.add('active');
 }
 </script>
